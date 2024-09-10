@@ -44,22 +44,22 @@
         <fieldset>
             <legend>Turni liberi</legend>
 
-            <label for="url"">Url foglio Turni</label>
-            <input id="url"" name="url" type="url" placeholder="Inserisci url" required size="100">
+            <label for="url">Url foglio Turni</label>
+            <input id="url" name="url" type="url" placeholder="Inserisci url" required size="100">
 
             <input type="button" value="calcola" onclick="main()">
 
         </fieldset>
     </form>
     <fieldset>
-        <table id="tabella">
+        <table>
             <tr>
                 <th colspan="2">Autista</th>
                 <th colspan="2">Caposervizio</th>
                 <th colspan="2">Terzo</th>
                 <th colspan="2">Quarto</th>
             </tr>
-            <tbody>
+            <tbody id="tabella">
             </tbody>
         </table>
     </fieldset>
@@ -102,7 +102,7 @@
 
         async function main() {
 
-            document.getElementById('tabella').getElementsByTagName('tbody')[0].innerHTML = '';
+            document.getElementById('tabella').innerHTML = '';
 
             const url = document.getElementById("url").value + "/export";
             console.log(url)
@@ -172,7 +172,7 @@
                 }
             });
             
-            var tbodyRef = document.getElementById('tabella').getElementsByTagName('tbody')[0];
+            var tbodyRef = document.getElementById('tabella');
 
             c_a = 0;
             c_c = 0;
