@@ -54,6 +54,7 @@
     <fieldset>
         <table>
             <tr>
+                <th>N</th>
                 <th colspan="2">Autista</th>
                 <th colspan="2">Caposervizio</th>
                 <th colspan="2">Terzo</th>
@@ -191,6 +192,7 @@
                 // Insert a row at the end of table
                 var newRow = tbodyRef.insertRow();
 
+                newRow.insertCell().appendChild(document.createTextNode(i+1));
                 // Insert a cell at the end of the row
                 if (c_a < turni_a.length) {
                     newRow.insertCell().appendChild(document.createTextNode(turni_a[c_a][0]));
