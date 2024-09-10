@@ -101,6 +101,9 @@
         }
 
         async function main() {
+
+            document.getElementById('tabella').getElementsByTagName('tbody')[0].innerHTML = '';
+
             const url = document.getElementById("url").value + "/export";
             console.log(url)
             const file = await get_file_from_endpoint(url);
@@ -168,8 +171,6 @@
                     }
                 }
             });
-
-            document.getElementById('tabella').getElementsByTagName('tbody').innerHTML = '';
             
             var tbodyRef = document.getElementById('tabella').getElementsByTagName('tbody')[0];
 
