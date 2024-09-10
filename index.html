@@ -71,16 +71,19 @@
                 response = await fetch(url);
             } catch (e) {
                 /* network error */
+                alert(`Network Error: ${e.message}`);
                 throw new Error(`Network Error: ${e.message}`);
             }
 
             /* check status code */
             if (response.status == 404) {
                 /* server 404 error -- file not found */
+                alert("File not found");
                 throw new Error("File not found");
             }
             if (response.status != 200) {
                 /* for most servers, a successful response will have status 200 */
+                alert(`Server status ${response.status}: ${response.statusText}`);
                 throw new Error(`Server status ${response.status}: ${response.statusText}`);
             }
 
@@ -90,6 +93,7 @@
                 ab = await response.arrayBuffer();
             } catch (e) {
                 /* data error */
+                alert(`Data Error: ${e.message}`);
                 throw new Error(`Data Error: ${e.message}`);
             }
 
@@ -97,7 +101,7 @@
         }
 
         async function main() {
-            const url = document.getElementById("url").value + "/export";
+            const url = document.getElementById("url") + "/export";
             console.log(url)
             const file = await get_file_from_endpoint(url);
             const workbook = XLSX.read(file);
