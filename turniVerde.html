@@ -55,14 +55,24 @@
         <table style="width: 100%">
             <tr>
                 <th>N</th>
-                <th colspan="2">Autista</th>
-                <th colspan="2">Caposervizio</th>
-                <th colspan="2">Terzo</th>
-                <th colspan="2">Quarto</th>
-                <th colspan="2">Centrtalino</th>
+                <th>Autista</th>
+                <th>Cs</th>
+                <th>Terzo</th>
+                <th>Quarto</th>
+                <th>Ce</th>
             </tr>
             <tbody id="tabella">
             </tbody>
+        </table>
+    </fieldset>
+    <fieldset name="Legenda">
+        <table style="width: 100%">
+            <tr>
+                <th class="mattina">Mattina</th>
+                <th class="pomeriggio">Pomeriggio</th>
+                <th class="sera">Sera</th>
+                <th class="notte">Notte</th>
+            </tr>
         </table>
     </fieldset>
     <script>
@@ -209,56 +219,46 @@
                 newRow.insertCell().appendChild(document.createTextNode(i+1));
                 // Insert a cell at the end of the row
                 if (c_a < turni_a.length) {
-                    newRow.insertCell().appendChild(document.createTextNode(turni_a[c_a][0].replace("DIURNO", "D")));
                     var row = newRow.insertCell()
-                    row.appendChild(document.createTextNode(turni_a[c_a][1]));
+                    row.appendChild(document.createTextNode(turni_a[c_a][0].replace("DIURNO", "D")));
                     row.classList.add(classi[turni_a[c_a][1]]);
                     c_a++;
                 } else {
                     newRow.insertCell();
-                    newRow.insertCell();
                 }
                 // Insert a cell at the end of the row
                 if (c_c < turni_c.length) {
-                    newRow.insertCell().appendChild(document.createTextNode(turni_c[c_c][0].replace("DIURNO", "D")));
                     var row = newRow.insertCell()
-                    row.appendChild(document.createTextNode(turni_c[c_c][1]));
+                    row.appendChild(document.createTextNode(turni_c[c_c][0].replace("DIURNO", "D")));
                     row.classList.add(classi[turni_c[c_c][1]]);
                     c_c++;
                 } else {
                     newRow.insertCell();
-                    newRow.insertCell();
                 }
                 // Insert a cell at the end of the row
                 if (c_t < turni_t.length) {
-                    newRow.insertCell().appendChild(document.createTextNode(turni_t[c_t][0].replace("DIURNO", "D")));
                     var row = newRow.insertCell()
-                    row.appendChild(document.createTextNode(turni_t[c_t][1]));
+                    row.appendChild(document.createTextNode(turni_t[c_t][0].replace("DIURNO", "D")));
                     row.classList.add(classi[turni_t[c_t][1]]);
                     c_t++;
                 } else {
                     newRow.insertCell();
-                    newRow.insertCell();
                 }
                 // Insert a cell at the end of the row
                 if (c_q < turni_q.length) {
-                    newRow.insertCell().appendChild(document.createTextNode(turni_q[c_q][0].replace("DIURNO", "D")));
                     var row = newRow.insertCell()
-                    row.appendChild(document.createTextNode(turni_q[c_q][1]));
+                    row.appendChild(document.createTextNode(turni_q[c_q][0].replace("DIURNO", "D")));
                     row.classList.add(classi[turni_q[c_q][1]]);
                     c_q++;
                 } else {
                     newRow.insertCell();
-                    newRow.insertCell();
                 }
                 if (c_ce < turni_ce.length) {
-                    newRow.insertCell().appendChild(document.createTextNode(turni_ce[c_ce][0].replace("DIURNO", "D")));
                     var row = newRow.insertCell()
-                    row.appendChild(document.createTextNode(turni_ce[c_ce][1]));
+                    row.appendChild(document.createTextNode(turni_ce[c_ce][0].replace("DIURNO", "D")));
                     row.classList.add(classi[turni_ce[c_ce][1]]);
                     c_ce++;
                 } else {
-                    newRow.insertCell();
                     newRow.insertCell();
                 }
             }
