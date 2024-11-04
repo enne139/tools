@@ -34,23 +34,52 @@
         .pomeriggio {
             background-color: orange;
         }
+
+        .navbar {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #333;
+        }
+
+        .navbar li {
+            float: left;
+        }
+
+        .navbar li a {
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+
+        .navbar li a:hover:not(.active) {
+            background-color: #111;
+        }
+
+        .navbar .active {
+            background-color: #04AA6D;
+        }
     </style>
     <!-- use xlsx.full.min.js from version 0.20.3 -->
     <script lang="javascript" src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
 </head>
 
 <body>
-    <form onsubmit="return false;">
-        <fieldset>
-            <legend>Turni liberi</legend>
-
+    <ul class="navbar">
+        <li><a class="active" href="./turniVerde.html">Trova buchi turni</a></li>
+        <li><a href="./turniVerde.html">Miei turni</a></li>
+    </ul>
+    <fieldset>
+        <form onsubmit="return false;">
             <label for="url">Url foglio Turni</label>
             <input id="url" name="url" type="url" placeholder="Inserisci url" required size="100">
 
             <input type="button" value="calcola" onclick="main()">
-
-        </fieldset>
-    </form>
+        </form>
+    </fieldset>
     <fieldset>
         <table style="width: 100%">
             <tr>
@@ -194,7 +223,7 @@
                     }
                 }
             });
-            
+
             var tbodyRef = document.getElementById('tabella');
 
             c_a = 0;
@@ -216,7 +245,7 @@
                 // Insert a row at the end of table
                 var newRow = tbodyRef.insertRow();
 
-                newRow.insertCell().appendChild(document.createTextNode(i+1));
+                newRow.insertCell().appendChild(document.createTextNode(i + 1));
                 // Insert a cell at the end of the row
                 if (c_a < turni_a.length) {
                     var row = newRow.insertCell()
