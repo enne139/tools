@@ -59,6 +59,7 @@
                 <th colspan="2">Caposervizio</th>
                 <th colspan="2">Terzo</th>
                 <th colspan="2">Quarto</th>
+                <th colspan="2">Centrtalino</th>
             </tr>
             <tbody id="tabella">
             </tbody>
@@ -116,6 +117,7 @@
             turni_c = [];
             turni_t = [];
             turni_q = [];
+            turni_ce = [];
 
             giorni.forEach(giorno => {
                 if (giorno.substring(3, 4) == "-") { // Diurno
@@ -131,6 +133,9 @@
                     if (workbook.Sheets[giorno]["C9"] == undefined && workbook.Sheets[giorno]["D9"] == undefined) {
                         turni_q.push([giorno, "m"]);
                     }
+                    if (workbook.Sheets[giorno]["C31"] == undefined && workbook.Sheets[giorno]["D31"] == undefined) {
+                        turni_ce.push([giorno, "m"]);
+                    }
 
                     if (workbook.Sheets[giorno]["C11"] == undefined && workbook.Sheets[giorno]["D11"] == undefined) {
                         turni_a.push([giorno, "p"]);
@@ -144,6 +149,10 @@
                     if (workbook.Sheets[giorno]["C14"] == undefined && workbook.Sheets[giorno]["D14"] == undefined) {
                         turni_q.push([giorno, "p"]);
                     }
+                    if (workbook.Sheets[giorno]["C32"] == undefined && workbook.Sheets[giorno]["D32"] == undefined) {
+                        turni_ce.push([giorno, "p"]);
+                    }
+
                 } else { // Notturno
                     if (workbook.Sheets[giorno]["C6"] == undefined && workbook.Sheets[giorno]["D6"] == undefined) {
                         turni_a.push([giorno, "s"]);
@@ -156,6 +165,9 @@
                     }
                     if (workbook.Sheets[giorno]["C9"] == undefined && workbook.Sheets[giorno]["D9"] == undefined) {
                         turni_q.push([giorno, "s"]);
+                    }
+                    if (workbook.Sheets[giorno]["C31"] == undefined && workbook.Sheets[giorno]["D31"] == undefined) {
+                        turni_ce.push([giorno, "s"]);
                     }
 
                     if (workbook.Sheets[giorno]["C11"] == undefined && workbook.Sheets[giorno]["D11"] == undefined) {
@@ -179,12 +191,14 @@
             c_c = 0;
             c_t = 0;
             c_q = 0;
+            c_ce = 0;
 
             classi = {
                 "s": "sera",
                 "n": "notte",
                 "m": "mattina",
                 "p": "pomeriggio",
+                "ce": "centralino",
                 "": ""
             }
 
@@ -195,7 +209,7 @@
                 newRow.insertCell().appendChild(document.createTextNode(i+1));
                 // Insert a cell at the end of the row
                 if (c_a < turni_a.length) {
-                    newRow.insertCell().appendChild(document.createTextNode(turni_a[c_a][0]));
+                    newRow.insertCell().appendChild(document.createTextNode(turni_a[c_a][0].replace("DIURNO", "D")));
                     var row = newRow.insertCell()
                     row.appendChild(document.createTextNode(turni_a[c_a][1]));
                     row.classList.add(classi[turni_a[c_a][1]]);
@@ -206,7 +220,7 @@
                 }
                 // Insert a cell at the end of the row
                 if (c_c < turni_c.length) {
-                    newRow.insertCell().appendChild(document.createTextNode(turni_c[c_c][0]));
+                    newRow.insertCell().appendChild(document.createTextNode(turni_c[c_c][0].replace("DIURNO", "D")));
                     var row = newRow.insertCell()
                     row.appendChild(document.createTextNode(turni_c[c_c][1]));
                     row.classList.add(classi[turni_c[c_c][1]]);
@@ -217,7 +231,7 @@
                 }
                 // Insert a cell at the end of the row
                 if (c_t < turni_t.length) {
-                    newRow.insertCell().appendChild(document.createTextNode(turni_t[c_t][0]));
+                    newRow.insertCell().appendChild(document.createTextNode(turni_t[c_t][0].replace("DIURNO", "D")));
                     var row = newRow.insertCell()
                     row.appendChild(document.createTextNode(turni_t[c_t][1]));
                     row.classList.add(classi[turni_t[c_t][1]]);
@@ -228,11 +242,21 @@
                 }
                 // Insert a cell at the end of the row
                 if (c_q < turni_q.length) {
-                    newRow.insertCell().appendChild(document.createTextNode(turni_q[c_q][0]));
+                    newRow.insertCell().appendChild(document.createTextNode(turni_q[c_q][0].replace("DIURNO", "D")));
                     var row = newRow.insertCell()
                     row.appendChild(document.createTextNode(turni_q[c_q][1]));
                     row.classList.add(classi[turni_q[c_q][1]]);
                     c_q++;
+                } else {
+                    newRow.insertCell();
+                    newRow.insertCell();
+                }
+                if (c_ce < turni_ce.length) {
+                    newRow.insertCell().appendChild(document.createTextNode(turni_ce[c_ce][0].replace("DIURNO", "D")));
+                    var row = newRow.insertCell()
+                    row.appendChild(document.createTextNode(turni_ce[c_ce][1]));
+                    row.classList.add(classi[turni_ce[c_ce][1]]);
+                    c_ce++;
                 } else {
                     newRow.insertCell();
                     newRow.insertCell();
