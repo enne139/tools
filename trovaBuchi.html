@@ -156,7 +156,7 @@
             document.getElementById('tabella').innerHTML = '';
 
             const url = document.getElementById("url").value + "/export";
-            console.log(url)
+            //console.log(url)
             const file = await get_file_from_endpoint(url);
             const workbook = XLSX.read(file);
 
@@ -302,6 +302,47 @@
                 }
             }
 
+
+
+            let out = "Autista \n";
+
+            turni_a.forEach(element => { 
+                out = out + element[0].replace("DIURNO", "") + " " + classi[element[1]] + "\n"
+            });
+
+            console.log(out);
+
+            out = "Cs \n";
+
+            turni_c.forEach(element => { 
+                out = out + element[0].replace("DIURNO", "") + " " + classi[element[1]] + "\n"
+            });
+
+            console.log(out);
+
+            out = "Terzo \n";
+
+            turni_t.forEach(element => { 
+                out = out + element[0].replace("DIURNO", "") + " " + classi[element[1]] + "\n"
+            });
+
+            console.log(out);
+
+            out = "Quarto \n";
+
+            turni_q.forEach(element => { 
+                out = out + element[0].replace("DIURNO", "") + " " + classi[element[1]] + "\n"
+            });
+
+            console.log(out);
+
+            out = "Centralino \n";
+
+            turni_ce.forEach(element => { 
+                out = out + element[0].replace("DIURNO", "") + " " + classi[element[1]] + "\n"
+            });
+
+            console.log(out);
         }
 
     </script>
