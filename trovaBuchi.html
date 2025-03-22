@@ -112,7 +112,26 @@
                 <th class="sera">Sera</th>
                 <th class="notte">Notte</th>
             </tr>
+            <tr>
+                <td><textarea name="out_"></textarea></td>
+                <td><textarea name="Text1"></textarea></td>
+                <td><textarea name="Text1"></textarea></td>
+                <td><textarea name="Text1"></textarea></td>
+            </tr>
         </table>
+    </fieldset>
+	<fieldset name="Legenda">
+		<table style="width: 100%">
+			<tr>
+				<th>Autista</th>
+				<th>Cs</th>
+				<th>Terzo</th>
+				<th>Quarto</th>
+				<th>Ce</th>
+			</tr>
+			<tbody id="tabella_out">
+			</tbody>
+		</table>
     </fieldset>
     <script>
         function init_file() {
@@ -314,21 +333,30 @@
                 }
             }
 
-            let out = "Autista \n";
+			
+			var tbodyRefOut = document.getElementById('tabella_out');
 
+            let out = "";
+			var row_out = tbodyRefOut.insertRow();
+			var cell;
+			
             turni_a.forEach(element => { 
                 out = out + element[0].replace("DIURNO", "") + " " + classi[element[1]] + "\n"
             });
 
-            console.log(out);
+			cell = row_out.insertCell();
+        	cell.appendChild(document.createTextNode(out);
+            console.log("Autista \n" + out);
 
-            out = "Cs \n";
+            out = "";
 
             turni_c.forEach(element => { 
                 out = out + element[0].replace("DIURNO", "") + " " + classi[element[1]] + "\n"
             });
 
-            console.log(out);
+			cell = row_out.insertCell();
+        	cell.appendChild(document.createTextNode(out);
+            console.log("Cs \n" + out);
 
             out = "Terzo \n";
 
@@ -336,23 +364,29 @@
                 out = out + element[0].replace("DIURNO", "") + " " + classi[element[1]] + "\n"
             });
 
+			cell = row_out.insertCell();
+        	cell.appendChild(document.createTextNode(out);
             console.log(out);
 
-            out = "Quarto \n";
+            out = "";
 
             turni_q.forEach(element => { 
                 out = out + element[0].replace("DIURNO", "") + " " + classi[element[1]] + "\n"
             });
 
-            console.log(out);
+			cell = row_out.insertCell();
+        	cell.appendChild(document.createTextNode(out);
+            console.log("Quarto \n" + out);
 
-            out = "Centralino \n";
+            out = "";
 
             turni_ce.forEach(element => { 
                 out = out + element[0].replace("DIURNO", "") + " " + classi[element[1]] + "\n"
             });
 
-            console.log(out);
+			cell = row_out.insertCell();
+        	cell.appendChild(document.createTextNode(out);
+            console.log("Centralino \n" + out);
         }
 
         init_file();
