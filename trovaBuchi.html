@@ -344,6 +344,7 @@
             textarea = document.createElement("textarea");
             text_out = document.createTextNode(out);
             textarea.appendChild(text_out);
+            textarea.rows=40;
             cell.appendChild(textarea);
             console.log("Autista \n" + out);
 
@@ -352,9 +353,13 @@
             turni_c.forEach(element => { 
                 out = out + element[0].replace("DIURNO", "") + " " + classi[element[1]] + "\n"
             });
-
+            
     	    cell = row_out.insertCell();
-            cell.appendChild(document.createTextNode('<textarea value="'+out+'"></textarea>'));
+            textarea = document.createElement("textarea");
+            text_out = document.createTextNode(out);
+            textarea.appendChild(text_out);
+            textarea.rows=40;
+            cell.appendChild(textarea);
             console.log("Cs \n" + out);
 
             out = "Terzo \n";
@@ -362,9 +367,13 @@
             turni_t.forEach(element => { 
                 out = out + element[0].replace("DIURNO", "") + " " + classi[element[1]] + "\n"
             });
-
+            
     	    cell = row_out.insertCell();
-            cell.appendChild(document.createTextNode('<textarea value="'+out+'"></textarea>'));
+            textarea = document.createElement("textarea");
+            text_out = document.createTextNode(out);
+            textarea.appendChild(text_out);
+            textarea.rows=40;
+            cell.appendChild(textarea);
             console.log(out);
 
             out = "";
@@ -372,9 +381,13 @@
             turni_q.forEach(element => { 
                 out = out + element[0].replace("DIURNO", "") + " " + classi[element[1]] + "\n"
             });
-
+            
     	    cell = row_out.insertCell();
-            cell.appendChild(document.createTextNode('<textarea value="'+out+'"></textarea>'));
+            textarea = document.createElement("textarea");
+            text_out = document.createTextNode(out);
+            textarea.appendChild(text_out);
+            textarea.rows=40;
+            cell.appendChild(textarea);
             console.log("Quarto \n" + out);
 
             out = "";
@@ -383,8 +396,12 @@
                 out = out + element[0].replace("DIURNO", "") + " " + classi[element[1]] + "\n"
             });
 
-    	   cell = row_out.insertCell();
-           cell.appendChild(document.createTextNode('<textarea value="'+out+'"></textarea>'));
+    	    cell = row_out.insertCell();
+            textarea = document.createElement("textarea");
+            text_out = document.createTextNode(out);
+            textarea.appendChild(text_out);
+            textarea.rows=40;
+            cell.appendChild(textarea);
            console.log("Centralino \n" + out);
         }
 
