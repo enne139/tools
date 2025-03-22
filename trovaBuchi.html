@@ -112,12 +112,6 @@
                 <th class="sera">Sera</th>
                 <th class="notte">Notte</th>
             </tr>
-            <tr>
-                <td><textarea name="out_"></textarea></td>
-                <td><textarea name="Text1"></textarea></td>
-                <td><textarea name="Text1"></textarea></td>
-                <td><textarea name="Text1"></textarea></td>
-            </tr>
         </table>
     </fieldset>
 	<fieldset name="Legenda">
@@ -344,8 +338,8 @@
                 out = out + element[0].replace("DIURNO", "") + " " + classi[element[1]] + "\n"
             });
 
-			cell = row_out.insertCell();
-        	cell.appendChild(document.createTextNode(out);
+	    cell = row_out.insertCell();
+            cell.appendChild(document.createTextNode(out));
             console.log("Autista \n" + out);
 
             out = "";
@@ -354,8 +348,8 @@
                 out = out + element[0].replace("DIURNO", "") + " " + classi[element[1]] + "\n"
             });
 
-			cell = row_out.insertCell();
-        	cell.appendChild(document.createTextNode(out);
+	    cell = row_out.insertCell();
+            cell.appendChild(document.createTextNode(out));
             console.log("Cs \n" + out);
 
             out = "Terzo \n";
@@ -364,8 +358,8 @@
                 out = out + element[0].replace("DIURNO", "") + " " + classi[element[1]] + "\n"
             });
 
-			cell = row_out.insertCell();
-        	cell.appendChild(document.createTextNode(out);
+	    cell = row_out.insertCell();
+            cell.appendChild(document.createTextNode(out));
             console.log(out);
 
             out = "";
@@ -374,8 +368,8 @@
                 out = out + element[0].replace("DIURNO", "") + " " + classi[element[1]] + "\n"
             });
 
-			cell = row_out.insertCell();
-        	cell.appendChild(document.createTextNode(out);
+	    cell = row_out.insertCell();
+            cell.appendChild(document.createTextNode(out));
             console.log("Quarto \n" + out);
 
             out = "";
@@ -384,9 +378,9 @@
                 out = out + element[0].replace("DIURNO", "") + " " + classi[element[1]] + "\n"
             });
 
-			cell = row_out.insertCell();
-        	cell.appendChild(document.createTextNode(out);
-            console.log("Centralino \n" + out);
+	   cell = row_out.insertCell();
+           cell.appendChild(document.createTextNode(out));
+           console.log("Centralino \n" + out);
         }
 
         init_file();
