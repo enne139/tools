@@ -115,6 +115,18 @@
         </table>
     </fieldset>
     <script>
+        function init_file() {
+            const params = new URLSearchParams(window.location.search);
+
+            const url = params.get("url");
+
+            if(params.has("url")) {
+                document.getElementById("url").value = url;
+
+                 main();
+            }
+        }
+        
         async function get_file_from_endpoint(url) {
             /* perform network request */
             let response;
