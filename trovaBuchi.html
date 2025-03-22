@@ -337,7 +337,7 @@
             var text_out;
 			
             turni_a.forEach(element => { 
-                out = out + element[0].replace("DIURNO", "") + " " + classi[element[1]] + "\n"
+                out = out + element[0].replace("-DIURNO", "") + " " + classi[element[1]] + "\n"
             });
 
     	    cell = row_out.insertCell();
@@ -351,7 +351,7 @@
             out = "";
 
             turni_c.forEach(element => { 
-                out = out + element[0].replace("DIURNO", "") + " " + classi[element[1]] + "\n"
+                out = out + element[0].replace("-DIURNO", "") + " " + classi[element[1]] + "\n"
             });
             
     	    cell = row_out.insertCell();
@@ -365,7 +365,7 @@
             out = "Terzo \n";
 
             turni_t.forEach(element => { 
-                out = out + element[0].replace("DIURNO", "") + " " + classi[element[1]] + "\n"
+                out = out + element[0].replace("-DIURNO", "") + " " + classi[element[1]] + "\n"
             });
             
     	    cell = row_out.insertCell();
@@ -379,7 +379,7 @@
             out = "";
 
             turni_q.forEach(element => { 
-                out = out + element[0].replace("DIURNO", "") + " " + classi[element[1]] + "\n"
+                out = out + element[0].replace("-DIURNO", "") + " " + classi[element[1]] + "\n"
             });
             
     	    cell = row_out.insertCell();
@@ -393,7 +393,7 @@
             out = "";
 
             turni_ce.forEach(element => { 
-                out = out + element[0].replace("DIURNO", "") + " " + classi[element[1]] + "\n"
+                out = out + element[0].replace("-DIURNO", "") + " " + classi[element[1]] + "\n"
             });
 
     	    cell = row_out.insertCell();
