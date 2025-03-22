@@ -328,18 +328,18 @@
             }
 
 			
-			var tbodyRefOut = document.getElementById('tabella_out');
+	    var tbodyRefOut = document.getElementById('tabella_out');
 
             let out = "";
-			var row_out = tbodyRefOut.insertRow();
-			var cell;
+	    var row_out = tbodyRefOut.insertRow();
+	    var cell;
 			
             turni_a.forEach(element => { 
                 out = out + element[0].replace("DIURNO", "") + " " + classi[element[1]] + "\n"
             });
 
 	    cell = row_out.insertCell();
-            cell.appendChild(document.createTextNode(out.replace("\n", "<br>")));
+            cell.appendChild(document.createTextNode('<textarea value="'+out+'"></textarea>'));
             console.log("Autista \n" + out);
 
             out = "";
@@ -349,7 +349,7 @@
             });
 
 	    cell = row_out.insertCell();
-            cell.appendChild(document.createTextNode(out.replace("\n", "<br>")));
+            cell.appendChild(document.createTextNode('<textarea value="'+out+'"></textarea>'));
             console.log("Cs \n" + out);
 
             out = "Terzo \n";
@@ -359,7 +359,7 @@
             });
 
 	    cell = row_out.insertCell();
-            cell.appendChild(document.createTextNode(out.replace("\n", "<br>")));
+            cell.appendChild(document.createTextNode('<textarea value="'+out+'"></textarea>'));
             console.log(out);
 
             out = "";
@@ -369,7 +369,7 @@
             });
 
 	    cell = row_out.insertCell();
-            cell.appendChild(document.createTextNode(out).replace("\n", "<br>"));
+            cell.appendChild(document.createTextNode('<textarea value="'+out+'"></textarea>'));
             console.log("Quarto \n" + out);
 
             out = "";
@@ -379,7 +379,7 @@
             });
 
 	   cell = row_out.insertCell();
-           cell.appendChild(document.createTextNode(out.replace("\n", "<br>")));
+           cell.appendChild(document.createTextNode('<textarea value="'+out+'"></textarea>'));
            console.log("Centralino \n" + out);
         }
 
