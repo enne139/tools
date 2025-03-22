@@ -339,7 +339,7 @@
             });
 
 	    cell = row_out.insertCell();
-            cell.appendChild(document.createTextNode(out));
+            cell.appendChild(document.createTextNode(out.replace("\n", "<br>")));
             console.log("Autista \n" + out);
 
             out = "";
@@ -349,7 +349,7 @@
             });
 
 	    cell = row_out.insertCell();
-            cell.appendChild(document.createTextNode(out));
+            cell.appendChild(document.createTextNode(out.replace("\n", "<br>")));
             console.log("Cs \n" + out);
 
             out = "Terzo \n";
@@ -359,7 +359,7 @@
             });
 
 	    cell = row_out.insertCell();
-            cell.appendChild(document.createTextNode(out));
+            cell.appendChild(document.createTextNode(out.replace("\n", "<br>")));
             console.log(out);
 
             out = "";
@@ -369,7 +369,7 @@
             });
 
 	    cell = row_out.insertCell();
-            cell.appendChild(document.createTextNode(out));
+            cell.appendChild(document.createTextNode(out).replace("\n", "<br>"));
             console.log("Quarto \n" + out);
 
             out = "";
@@ -379,7 +379,7 @@
             });
 
 	   cell = row_out.insertCell();
-           cell.appendChild(document.createTextNode(out));
+           cell.appendChild(document.createTextNode(out.replace("\n", "<br>")));
            console.log("Centralino \n" + out);
         }
 
