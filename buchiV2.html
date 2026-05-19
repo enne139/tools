@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Turni Verde - Calendario Responsive</title>
+    <style>
+        :root {
+            --primary-color: #04AA6D;
+            --bg-color: #f4f7f6;
+            --card-bg: #ffffff;
+            --text-color: #333333;
+            --border-color: #e0e0e0;
+            
+            /* Colori Turni */
+            --mattina: #fff3cd;
+            --mattina-testo: #664d03;
+            --pomeriggio: #ffe8cc;
+            --pomeriggio-testo: #a15c00;
+            --sera: #e2f0d9;
+            --sera-testo: #2b5115;
+            --notte: #cfe2ff;
+            --notte-testo: #004085;
+            /* Colore Violetto per Assistenze/Gettoni */
+            --assistenza-bg: #f3e5f5;
+            --assistenza-testo: #6a1b9a;
+            --assistenza-border: #ce93d8;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 10px auto;
+            padding: 0 5px;
+        }
+
+        .titolo-principale {
+            text-align: center;
+            color: #2c3e50;
+            margin: 25px 0 5px 0;
+            font-size: 1.6em;
+            font-weight: 700;
+            border-bottom: 3px solid var(--primary-color);
+            padding-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        .titolo-principale span {
+            color: var(--primary-color);
+            display: block;
+            font-size: 0.6em;
+            font-weight: 500;
+            margin-top: 5px;
+            text-transform: none;
+        }
+
+        .last-update {
+            text-align: center;
+            font-size: 0.85em;
+            color: #7f8c8d;
+            margin-bottom: 20px;
+            font-style: italic;
+        }
+
+        fieldset {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            min-width: 0; 
+        }
+
+        legend {
+            font-weight: bold;
+            color: #2c3e50;
+            padding: 0 8px;
+            font-size: 0.95em;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            width: 100%;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 10px;
+            width: 100%;
+        }
+
+        input[type="url"], select {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 14px;
+            background-color: #fff;
+        }
+
+        input[type="button"] {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 14px;
+            white-space: nowrap;
+        }
+
+        input[type="button"].btn-secondary {
+            background-color: #e74c3c;
+        }
+
+        /* FILTRI */
+        .filter-group {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .filter-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        .filter-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--primary-color);
+        }
+
+        /* LEGENDA */
+        .legenda-inline {
+            display: flex;
+            gap: 10px;
+            font-size: 11px;
+            margin-bottom: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .legenda-item { display: flex; align-items: center; gap: 4px; }
+        .dot { width: 10px; height: 10px; border-radius: 2px; }
+
+        /* Contenitore a scorrimento */
+        .calendar-wrapper {
+            width: 100%;
+            overflow-x: auto; 
+            -webkit-overflow-scrolling: touch; 
+            padding-bottom: 10px; 
+        }
+
+        /* GRIGLIA CALENDARIO */
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 4px;
+        }
+
+        .calendar-day-header {
+            text-align: center;
+            font-weight: 600;
+            background-color: #2c3e50;
+            color: white;
+            padding: 6px 0;
+            border-radius: 4px;
+            font-size: 0.8em;
+        }
+
+        .calendar-cell {
+            background: #fff;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            min-height: 85px;
+            padding: 4px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .calendar-cell.empty {
+            background-color: #eaeded;
+            border: none;
+        }
+
+        .day-number {
+            font-weight: 700;
+            color: #7f8c8d;
+            font-size: 0.95em;
+            margin-bottom: 4px;
+        }
+
+        /* BADGES DEI RUOLI */
+        .hole-badge {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 10px;
+            padding: 2px 4px;
+            margin-bottom: 2px;
+            border-radius: 3px;
+            font-weight: 600;
+            line-height: 1.2;
+        }
+
+        .badge-m { background-color: var(--mattina); color: var(--mattina-testo); }
+        .badge-p { background-color: var(--pomeriggio); color: var(--pomeriggio-testo); }
+        .badge-s { background-color: var(--sera); color: var(--sera-testo); }
+        .badge-n { background-color: var(--notte); color: var(--notte-testo); }
+        
+        /* Stile Assistenza/Gettone esteso */
+        .badge-assistenza { background-color: var(--assistenza-bg); color: var(--assistenza-testo); border: 1px solid var(--assistenza-border); }
+        
+        .role-name { flex-grow: 1; text-align: left; }
+        .macro-tag {
+            background-color: rgba(0,0,0,0.06);
+            padding: 1px 4px;
+            border-radius: 3px;
+            border: 1px solid rgba(0,0,0,0.1);
+            margin-right: 4px;
+            font-size: 0.85em;
+        }
+        .macro-tag.violetto {
+            background-color: var(--assistenza-bg);
+            color: var(--assistenza-testo);
+            border-color: var(--assistenza-border);
+        }
+        
+        .mobile-role-letter { display: none; }
+        .mobile-day { display: none; }
+
+        /* OUTPUT TEXTAREAS */
+        .output-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .output-box {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+        }
+        .output-box label {
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 4px;
+            font-size: 13px;
+        }
+        textarea {
+            width: 100%;
+            box-sizing: border-box;
+            height: 150px;
+            font-family: monospace;
+            font-size: 12px;
+            padding: 6px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            resize: vertical;
+            background-color: #fafafa;
+        }
+
+        @media (max-width: 768px) {
+            .container { padding: 0 2px; }
+            fieldset { padding: 8px; }
+            .form-row { flex-direction: column; }
+            .desktop-day { display: none; } 
+            .mobile-day { display: inline; }
+            .calendar-grid { min-width: 750px; }
+            .calendar-cell { min-height: 80px; padding: 4px; }
+            .hole-badge { padding: 3px 4px; font-size: 9px; display: flex; justify-content: flex-start; }
+            .hole-badge .role-name { display: none; }
+            .hole-badge .mobile-role-letter { display: inline; font-weight: 800; }
+            .hole-badge .shift-letter { margin-left: auto; padding-left: 5px; font-size: 9px; font-weight: 800; opacity: 0.9; }
+        }
+
+        @media (min-width: 769px) {
+            .form-group { flex-direction: row; }
+            .form-row { flex-direction: row; }
+            input[type="button"] { width: auto; }
+            .output-container { flex-direction: row; }
+            .output-box { width: 20%; }
+        }
+    </style>
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <h1 id="titolo_mese" class="titolo-principale">
+            Analisi Buchi Turni
+            <span id="sottotitolo_mese">In attesa del caricamento del file...</span>
+        </h1>
+        <div id="ultimo_aggiornamento" class="last-update"></div>
+
+        <fieldset>
+            <legend>Caricamento Nuovo File</legend>
+            <form onsubmit="return false;" class="form-group">
+                <input id="url" name="url" type="url" placeholder="Inserisci l'URL di Google Sheets..." required>
+                <input type="button" value="Calcola" onclick="main()">
+            </form>
+        </fieldset>
+
+        <fieldset id="sezione_storico" style="display: none;">
+            <legend>Seleziona Mese in Memoria</legend>
+            <div class="form-row">
+                <select id="select_mesi_salvati" onchange="caricaMeseStorico()">
+                    <option value="">-- Seleziona un mese salvato precedente --</option>
+                </select>
+                <input type="button" value="Svuota Memoria" class="btn-secondary" onclick="svuotaStoricoLocal()">
+            </div>
+        </fieldset>
+
+        <fieldset>
+            <legend>Mostra/Nascondi Ruoli</legend>
+            <div class="filter-group">
+                <label class="filter-item"><input type="checkbox" id="chk_autista" checked onchange="renderizzaDati()"> Autista (AU)</label>
+                <label class="filter-item"><input type="checkbox" id="chk_cs" checked onchange="renderizzaDati()"> Cs (CS)</label>
+                <label class="filter-item"><input type="checkbox" id="chk_terzo" checked onchange="renderizzaDati()"> Terzo (TE)</label>
+                <label class="filter-item"><input type="checkbox" id="chk_quarto" checked onchange="renderizzaDati()"> Quarto (QU)</label>
+                <label class="filter-item"><input type="checkbox" id="chk_centralino" checked onchange="renderizzaDati()"> Centralino (CE)</label>
+            </div>
+        </fieldset>
+
+        <fieldset>
+            <legend>Calendario Mensile</legend>
+            <div class="legenda-inline">
+                <div class="legenda-item"><div class="dot" style="background: var(--mattina)"></div> M</div>
+                <div class="legenda-item"><div class="dot" style="background: var(--pomeriggio)"></div> P</div>
+                <div class="legenda-item"><div class="dot" style="background: var(--sera)"></div> S</div>
+                <div class="legenda-item"><div class="dot" style="background: var(--notte)"></div> N</div>
+            </div>
+
+            <div class="calendar-wrapper">
+                <div class="calendar-grid" id="calendario_corpo"></div>
+            </div>
+        </fieldset>
+
+        <fieldset>
+            <legend>Testo Pronto da Copiare</legend>
+            <div class="output-container" id="output_box_layout"></div>
+        </fieldset>
+    </div>
+
+    <script>
+        let cacheBuchiDelMese = {};
+        let cacheConfigCalendario = { totaleGiorniMese: 30, giornoSettimanaPartenza: 0 };
+
+        function init_file() {
+            aggiornaMenuStorico();
+            const params = new URLSearchParams(window.location.search);
+            if(params.has("url")) {
+                document.getElementById("url").value = params.get("url");
+                main();
+            }
+        }
+        
+        async function get_file_from_endpoint(url) {
+            let response;
+            try { response = await fetch(url); } catch (e) { alert(`Network Error: ${e.message}`); throw e; }
+            if (response.status != 200) { alert(`Errore Server: ${response.status}`); throw new Error(); }
+            return await response.arrayBuffer();
+        }
+
+        function analizzaDataB2(workbook, primoFoglio) {
+            if (workbook.Sheets[primoFoglio] && workbook.Sheets[primoFoglio]["B2"]) {
+                let cella = workbook.Sheets[primoFoglio]["B2"];
+                let valore = cella.w || cella.v;
+                if (valore) {
+                    if (valore instanceof Date) return valore;
+                    let parti = valore.toString().split("/");
+                    if (parti.length === 3) return new Date(parseInt(parti[2], 10), parseInt(parti[1], 10) - 1, 1);
+                }
+            }
+            return new Date();
+        }
+
+        function salvaUrlInStorico(nomeMese, url) {
+            let archivio = JSON.parse(localStorage.getItem("turni_verde_links")) || {};
+            archivio[nomeMese] = url;
+            localStorage.setItem("turni_verde_links", JSON.stringify(archivio));
+            aggiornaMenuStorico();
+        }
+
+        function aggiornaMenuStorico() {
+            let archivio = JSON.parse(localStorage.getItem("turni_verde_links")) || {};
+            let select = document.getElementById("select_mesi_salvati");
+            let sezione = document.getElementById("sezione_storico");
+            
+            select.innerHTML = '<option value="">-- Seleziona un mese salvato precedente --</option>';
+            
+            let chiaviMesi = Object.keys(archivio);
+            if (chiaviMesi.length > 0) {
+                sezione.style.display = "block";
+                chiaviMesi.forEach(mese => {
+                    let opt = document.createElement("option");
+                    opt.value = archivio[mese];
+                    opt.innerText = mese;
+                    select.appendChild(opt);
+                });
+            } else {
+                sezione.style.display = "none";
+            }
+        }
+
+        function caricaMeseStorico() {
+            let select = document.getElementById("select_mesi_salvati");
+            if (select.value !== "") {
+                document.getElementById("url").value = select.value;
+                main();
+            }
+        }
+
+        function svuotaStoricoLocal() {
+            if (confirm("Sei sicuro di voler cancellare tutti gli URL salvati nella memoria? (I file originali non subiranno modifiche)")) {
+                localStorage.removeItem("turni_verde_links");
+                aggiornaMenuStorico();
+            }
+        }
+
+        async function main() {
+            const sottotitolo = document.getElementById('sottotitolo_mese');
+            const targetUltimoAggiornamento = document.getElementById('ultimo_aggiornamento');
+            sottotitolo.innerText = "Caricamento e Analisi in corso...";
+            targetUltimoAggiornamento.innerText = "";
+
+            const urlInput = document.getElementById("url").value;
+            const file = await get_file_from_endpoint(urlInput + "/export");
+            const workbook = XLSX.read(file);
+
+            var giorniFogli = (workbook.SheetNames).filter((word) => ["LUN", "MAR", "MER", "GIO", "VEN", "SAB", "DOM"].indexOf(word.substring(0, 3)) != -1);
+            if (giorniFogli.length === 0) {
+                sottotitolo.innerText = "Errore: Nessun foglio valido trovato.";
+                return;
+            }
+
+            const dataInizio = analizzaDataB2(workbook, giorniFogli[0]);
+            const mesiNomi = ["GENNAIO", "FEBBRAIO", "MARZO", "APRILE", "MAGGIO", "GIUGNO", "LUGLIO", "AGOSTO", "SETTEMBRE", "OTTOBRE", "NOVEMBRE", "DICEMBRE"];
+            let testoPeriodo = `${mesiNomi[dataInizio.getMonth()]} ${dataInizio.getFullYear()}`;
+            sottotitolo.innerText = `Mese analizzato: ${testoPeriodo}`;
+
+            const dataOdierna = new Date();
+            const stringaData = dataOdierna.toLocaleDateString("it-IT", { day: '2-digit', month: '2-digit', year: 'numeric' });
+            const stringaOra = dataOdierna.toLocaleTimeString("it-IT", { hour: '2-digit', minute:'2-digit', second:'2-digit' });
+            targetUltimoAggiornamento.innerText = `Dati sincronizzati il ${stringaData} alle ${stringaOra}`;
+
+            salvaUrlInStorico(testoPeriodo, urlInput);
+
+            cacheBuchiDelMese = {};
+            for(let d=1; d<=31; d++) cacheBuchiDelMese[d] = [];
+
+            giorniFogli.forEach(giorno => {
+                let sheet = workbook.Sheets[giorno];
+                if (!sheet || !sheet['!ref']) return;
+
+                let giornoNum = parseInt(giorno.substring(4).replace('DIURNO ', ''), 10);
+                if (isNaN(giornoNum)) return;
+
+                let isDiurno = giorno.toUpperCase().includes("DIURNO");
+                let range = XLSX.utils.decode_range(sheet['!ref']);
+                let maxRow = range.e.r + 1; 
+
+                const getVal = (col, r) => {
+                    let cell = sheet[col + r];
+                    return cell && cell.v !== undefined && cell.v !== null ? cell.v.toString().trim() : "";
+                };
+                const isEmpty = (col, r) => getVal(col, r) === "";
+
+                let r = 6;
+                while (r <= maxRow) {
+                    let valA = getVal('A', r).toUpperCase();
+                    
+                    if (["H12", "H24", "ASSISTENZA", "GETTONE", "CENTRALINO"].includes(valA)) {
+                        let macro = valA;
+                        
+                        if (macro === "CENTRALINO") {
+                            if (isDiurno) {
+                                if (isEmpty('C', r) && isEmpty('D', r)) cacheBuchiDelMese[giornoNum].push({ ruolo: "Centralino", orario: "m", macro });
+                                if (isEmpty('C', r+1) && isEmpty('D', r+1)) cacheBuchiDelMese[giornoNum].push({ ruolo: "Centralino", orario: "p", macro });
+                            } else {
+                                if (isEmpty('C', r) && isEmpty('D', r)) cacheBuchiDelMese[giornoNum].push({ ruolo: "Centralino", orario: "s", macro });
+                            }
+                            r += 3; 
+                        } else {
+                            let shiftDescA = getVal('A', r+1).toUpperCase();
+                            let shiftDescB = getVal('B', r+1).toUpperCase();
+                            
+                            let testoPulitoA = shiftDescA.replace(/[^A-Z0-9]/g, '');
+                            let testoPulitoB = shiftDescB.replace(/[^A-Z0-9]/g, '');
+                            let descrizioneVuota = (testoPulitoA === "" && testoPulitoB === "");
+                            
+                            let bloccoNomiVuoto = isEmpty('C', r) && isEmpty('D', r) &&
+                                                isEmpty('C', r+1) && isEmpty('D', r+1) &&
+                                                isEmpty('C', r+2) && isEmpty('D', r+2) &&
+                                                isEmpty('C', r+3) && isEmpty('D', r+3);
+
+                            if ((macro === "ASSISTENZA" || macro === "GETTONE") && descrizioneVuota && bloccoNomiVuoto) {
+                                r += 4; 
+                                continue;
+                            }
+
+                            let orario = isDiurno ? "m" : "s"; 
+                            if (shiftDescA.includes("MATT") || shiftDescB.includes("MATT")) orario = "m";
+                            else if (shiftDescA.includes("POM") || shiftDescB.includes("POM")) orario = "p";
+                            else if (shiftDescA.includes("SER") || shiftDescB.includes("SER")) orario = "s";
+                            else if (shiftDescA.includes("NOT") || shiftDescB.includes("NOT")) orario = "n";
+                            
+                            if (isEmpty('C', r) && isEmpty('D', r)) cacheBuchiDelMese[giornoNum].push({ ruolo: "Autista", orario: orario, macro });
+                            if (isEmpty('C', r+1) && isEmpty('D', r+1)) cacheBuchiDelMese[giornoNum].push({ ruolo: "Cs", orario: orario, macro });
+                            if (isEmpty('C', r+2) && isEmpty('D', r+2)) cacheBuchiDelMese[giornoNum].push({ ruolo: "Terzo", orario: orario, macro });
+                            if (isEmpty('C', r+3) && isEmpty('D', r+3)) cacheBuchiDelMese[giornoNum].push({ ruolo: "Quarto", orario: orario, macro });
+                            
+                            r += 4; 
+                        }
+                    } else {
+                        r++; 
+                    }
+                }
+            });
+
+            let anno = dataInizio.getFullYear();
+            let mese = dataInizio.getMonth();
+            cacheConfigCalendario.totaleGiorniMese = new Date(anno, mese + 1, 0).getDate();
+            cacheConfigCalendario.giornoSettimanaPartenza = new Date(anno, mese, 1).getDay() - 1;
+            if (cacheConfigCalendario.giornoSettimanaPartenza === -1) cacheConfigCalendario.giornoSettimanaPartenza = 6;
+
+            renderizzaDati();
+        }
+
+        function renderizzaDati() {
+            const calCorpo = document.getElementById('calendario_corpo');
+            calCorpo.innerHTML = '';
+            const outContainer = document.getElementById('output_box_layout');
+            outContainer.innerHTML = '';
+
+            const filtriRuoli = {
+                "Autista": document.getElementById('chk_autista').checked,
+                "Cs": document.getElementById('chk_cs').checked,
+                "Terzo": document.getElementById('chk_terzo').checked,
+                "Quarto": document.getElementById('chk_quarto').checked,
+                "Centralino": document.getElementById('chk_centralino').checked
+            };
+
+            const sigleRuolo = { "Autista": "AU", "Cs": "CS", "Terzo": "TE", "Quarto": "QU", "Centralino": "CE" };
+            const mappaClassi = { "m": "badge-m", "p": "badge-p", "s": "badge-s", "n": "badge-n" };
+
+            const giorniCorti = ["Lu", "Ma", "Me", "Gi", "Ve", "Sa", "Do"];
+            const giorniLunghi = ["Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "Sabato", "Domenica"];
+
+            giorniCorti.forEach((testoCorto, index) => {
+                let h = document.createElement('div');
+                h.className = 'calendar-day-header';
+                h.innerHTML = `<span class="desktop-day">${giorniLunghi[index]}</span><span class="mobile-day">${testoCorto}</span>`;
+                calCorpo.appendChild(h);
+            });
+
+            for (let i = 0; i < cacheConfigCalendario.giornoSettimanaPartenza; i++) {
+                let vuota = document.createElement('div');
+                vuota.className = 'calendar-cell empty';
+                calCorpo.appendChild(vuota);
+            }
+
+            for (let gAt = 1; gAt <= cacheConfigCalendario.totaleGiorniMese; gAt++) {
+                let cella = document.createElement('div');
+                cella.className = 'calendar-cell';
+                
+                let numLabel = document.createElement('div');
+                numLabel.className = 'day-number';
+                numLabel.innerText = gAt;
+                cella.appendChild(numLabel);
+
+                let buchiOggi = cacheBuchiDelMese[gAt] || [];
+                buchiOggi.forEach(buco => {
+                    if (filtriRuoli[buco.ruolo]) {
+                        let isAssistenza = (buco.macro === "ASSISTENZA" || buco.macro === "GETTONE");
+                        let cssAssistenza = isAssistenza ? "violetto" : "";
+                        let badgeClass = isAssistenza ? "badge-assistenza" : mappaClassi[buco.orario];
+                        
+                        let badge = document.createElement('div');
+                        badge.className = `hole-badge ${badgeClass}`;
+                        
+                        let macroShort = buco.macro === "CENTRALINO" ? "" : `<span class="mobile-macro ${cssAssistenza}">${buco.macro.substring(0,3)}-</span>`;
+                        // Qui rimuovo la visualizzazione della lettera per Assistenze e Gettoni
+                        let shiftLetterDisplay = isAssistenza ? "" : `<span class="shift-letter">${buco.orario.toUpperCase()}</span>`;
+                        
+                        badge.innerHTML = `
+                            <span class="role-name"><span class="macro-tag ${cssAssistenza}">${buco.macro}</span> ${buco.ruolo}</span>
+                            <span class="mobile-role-letter">${macroShort}${sigleRuolo[buco.ruolo]}</span>
+                            ${shiftLetterDisplay}
+                        `;
+                        cella.appendChild(badge);
+                    }
+                });
+                calCorpo.appendChild(cella);
+            }
+
+            const nomiRuoliScrittura = ["Autista", "Cs", "Terzo", "Quarto", "Centralino"];
+            const classiNomi = { "m": "mattina", "p": "pomeriggio", "s": "sera", "n": "notte" };
+            
+            nomiRuoliScrittura.forEach(nomeRuolo => {
+                if (filtriRuoli[nomeRuolo]) {
+                    let outStr = "";
+                    for(let g=1; g<=cacheConfigCalendario.totaleGiorniMese; g++){
+                        (cacheBuchiDelMese[g] || []).forEach(b => {
+                            if(b.ruolo === nomeRuolo) {
+                                let stringaGiorno = `${giorniLunghi[(cacheConfigCalendario.giornoSettimanaPartenza + g - 1) % 7].substring(0,3).toUpperCase()} ${g < 10 ? '0'+g : g}`;
+                                // Pulizia del testo di output per Assistenze/Gettoni
+                                let tipoTurno = (b.macro === "ASSISTENZA" || b.macro === "GETTONE") ? "" : ` ${classiNomi[b.orario] || "centralino"}`;
+                                outStr += `${stringaGiorno} [${b.macro}]${tipoTurno}\n`;
+                            }
+                        });
+                    }
+
+                    let wrapper = document.createElement('div');
+                    wrapper.className = "output-box";
+                    let label = document.createElement('label');
+                    label.innerText = nomeRuolo;
+                    let txt = document.createElement('textarea');
+                    txt.value = outStr;
+                    
+                    wrapper.appendChild(label);
+                    wrapper.appendChild(txt);
+                    outContainer.appendChild(wrapper);
+                }
+            });
+        }
+        
+        init_file();
+    </script>
+</body>
+</html>
