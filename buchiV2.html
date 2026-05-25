@@ -247,7 +247,7 @@
         .mobile-role-letter { display: none; }
         .mobile-day { display: none; }
 
-        /* OUTPUT TEXTAREAS */
+        /* OUTPUT TEXTAREAS E BOTTONI */
         .output-container {
             display: flex;
             flex-direction: column;
@@ -276,6 +276,27 @@
             resize: vertical;
             background-color: #fafafa;
         }
+        
+        /* Stile Bottoni Copia */
+        .btn-copia {
+            background-color: #2c3e50;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 11px;
+            margin-top: 5px;
+            align-self: flex-end; /* Allinea a destra */
+            transition: background-color 0.3s;
+        }
+        .btn-copia:hover {
+            background-color: #1a252f;
+        }
+        .btn-copia.success {
+            background-color: var(--primary-color);
+        }
 
         @media (max-width: 768px) {
             .container { padding: 0 2px; }
@@ -295,8 +316,11 @@
             .form-group { flex-direction: row; }
             .form-row { flex-direction: row; }
             input[type="button"] { width: auto; }
-            .output-container { flex-direction: row; }
-            .output-box { width: 20%; }
+            /* Riorganizzati i flussi dei textareas per affiancarli in modo pulito */
+            .output-container { flex-direction: row; flex-wrap: wrap; }
+            .output-box { flex: 1; min-width: calc(20% - 12px); }
+            /* Classe aggiuntiva per i box di periodo mensile/settimanale */
+            .output-box.wide { min-width: calc(48% - 15px); } 
         }
     </style>
     <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
@@ -355,13 +379,31 @@
 
         <fieldset>
             <legend>Testo Pronto da Copiare</legend>
-            <div class="output-container" id="output_box_layout"></div>
+            <div class="output-container" id="copiami_per_ruoli"></div>
+            <div class="output-container" id="copiami_per_periodo"></div>
         </fieldset>
     </div>
 
     <script>
         let cacheBuchiDelMese = {};
-        let cacheConfigCalendario = { totaleGiorniMese: 30, giornoSettimanaPartenza: 0 };
+        let cacheConfigCalendario = { totaleGiorniMese: 30, giornoSettimanaPartenza: 0, meseAnalizzato: null, annoAnalizzato: null };
+
+        // Funzione di supporto per copiare il testo
+        function copiaTesto(bottone, testo) {
+            navigator.clipboard.writeText(testo).then(() => {
+                const testoOriginale = bottone.innerText;
+                bottone.innerText = "Copiato!";
+                bottone.classList.add("success");
+                
+                setTimeout(() => {
+                    bottone.innerText = testoOriginale;
+                    bottone.classList.remove("success");
+                }, 2000);
+            }).catch(err => {
+                console.error("Errore durante la copia: ", err);
+                alert("Non è stato possibile copiare il testo.");
+            });
+        }
 
         function init_file() {
             aggiornaMenuStorico();
@@ -537,6 +579,8 @@
 
             let anno = dataInizio.getFullYear();
             let mese = dataInizio.getMonth();
+            cacheConfigCalendario.meseAnalizzato = mese;
+            cacheConfigCalendario.annoAnalizzato = anno;
             cacheConfigCalendario.totaleGiorniMese = new Date(anno, mese + 1, 0).getDate();
             cacheConfigCalendario.giornoSettimanaPartenza = new Date(anno, mese, 1).getDay() - 1;
             if (cacheConfigCalendario.giornoSettimanaPartenza === -1) cacheConfigCalendario.giornoSettimanaPartenza = 6;
@@ -547,8 +591,10 @@
         function renderizzaDati() {
             const calCorpo = document.getElementById('calendario_corpo');
             calCorpo.innerHTML = '';
-            const outContainer = document.getElementById('output_box_layout');
-            outContainer.innerHTML = '';
+            const copiamiPerRuoliContainer = document.getElementById('copiami_per_ruoli');
+            copiamiPerRuoliContainer.innerHTML = '';
+            const copiamiPerPeriodoContainer = document.getElementById('copiami_per_periodo');
+            copiamiPerPeriodoContainer.innerHTML = '';
 
             const filtriRuoli = {
                 "Autista": document.getElementById('chk_autista').checked,
@@ -597,7 +643,6 @@
                         badge.className = `hole-badge ${badgeClass}`;
                         
                         let macroShort = buco.macro === "CENTRALINO" ? "" : `<span class="mobile-macro ${cssAssistenza}">${buco.macro.substring(0,3)}-</span>`;
-                        // Qui rimuovo la visualizzazione della lettera per Assistenze e Gettoni
                         let shiftLetterDisplay = isAssistenza ? "" : `<span class="shift-letter">${buco.orario.toUpperCase()}</span>`;
                         
                         badge.innerHTML = `
@@ -614,6 +659,7 @@
             const nomiRuoliScrittura = ["Autista", "Cs", "Terzo", "Quarto", "Centralino"];
             const classiNomi = { "m": "mattina", "p": "pomeriggio", "s": "sera", "n": "notte" };
             
+            // Renderizza i classici output per singolo ruolo
             nomiRuoliScrittura.forEach(nomeRuolo => {
                 if (filtriRuoli[nomeRuolo]) {
                     let outStr = "";
@@ -621,7 +667,6 @@
                         (cacheBuchiDelMese[g] || []).forEach(b => {
                             if(b.ruolo === nomeRuolo) {
                                 let stringaGiorno = `${giorniLunghi[(cacheConfigCalendario.giornoSettimanaPartenza + g - 1) % 7].substring(0,3).toUpperCase()} ${g < 10 ? '0'+g : g}`;
-                                // Pulizia del testo di output per Assistenze/Gettoni
                                 let tipoTurno = (b.macro === "ASSISTENZA" || b.macro === "GETTONE") ? "" : ` ${classiNomi[b.orario] || "centralino"}`;
                                 outStr += `${stringaGiorno} [${b.macro}]${tipoTurno}\n`;
                             }
@@ -635,11 +680,114 @@
                     let txt = document.createElement('textarea');
                     txt.value = outStr;
                     
+                    let btnCopia = document.createElement('button');
+                    btnCopia.className = "btn-copia";
+                    btnCopia.innerText = "Copia Testo";
+                    btnCopia.onclick = () => copiaTesto(btnCopia, txt.value);
+                    
                     wrapper.appendChild(label);
                     wrapper.appendChild(txt);
-                    outContainer.appendChild(wrapper);
+                    wrapper.appendChild(btnCopia);
+                    copiamiPerRuoliContainer.appendChild(wrapper);
                 }
             });
+
+            // ================== NUOVI OUTPUT RAGGRUPPATI (Mese / Settimana) ==================
+
+            function generaTestoRaggruppato(startDay, endDay) {
+                let outStr = "";
+                for (let g = startDay; g <= endDay; g++) {
+                    let hasHoles = false;
+                    let nomeGiorno = giorniLunghi[(cacheConfigCalendario.giornoSettimanaPartenza + g - 1) % 7].toLowerCase();
+                    let dayString = `${g} ${nomeGiorno}`;
+                    let righeGiorno = {};
+
+                    (cacheBuchiDelMese[g] || []).forEach(b => {
+                        if (!filtriRuoli[b.ruolo]) return;
+
+                        let isAssistenza = (b.macro === "ASSISTENZA" || b.macro === "GETTONE");
+                        
+                        // Formatta il nome Macro
+                        let macroFmt = b.macro;
+                        if (b.macro === "ASSISTENZA") macroFmt = "Assistenza";
+                        else if (b.macro === "GETTONE") macroFmt = "Gettone";
+                        else if (b.macro === "CENTRALINO") macroFmt = "Centralino";
+
+                        // Formatta il momento del turno
+                        let timeFmt = isAssistenza ? "" : (classiNomi[b.orario] || "");
+                        
+                        let key = `${macroFmt} ${timeFmt}`.trim();
+
+                        if (!righeGiorno[key]) righeGiorno[key] = [];
+                        righeGiorno[key].push(b.ruolo.toLowerCase());
+                        hasHoles = true;
+                    });
+
+                    if (hasHoles) {
+                        outStr += `${dayString}\n`;
+                        for (let k in righeGiorno) {
+                            let rightPart = righeGiorno[k].join(" ");
+                            outStr += `${k.padEnd(22, ' ')}${rightPart}\n`; 
+                        }
+                        outStr += `\n`; // Riga vuota di separazione tra giorni
+                    }
+                }
+                return outStr.trim();
+            }
+
+            // 1. Elaborazione "Tutto il Mese"
+            let testoTuttoIlMese = generaTestoRaggruppato(1, cacheConfigCalendario.totaleGiorniMese);
+            
+            let wrapperMese = document.createElement('div');
+            wrapperMese.className = "output-box wide";
+            let labelMese = document.createElement('label');
+            labelMese.innerText = "Buchi Tutto il Mese";
+            let txtMese = document.createElement('textarea');
+            txtMese.value = testoTuttoIlMese || "Nessun buco nel mese.";
+            txtMese.style.height = "250px"; 
+            
+            let btnCopiaMese = document.createElement('button');
+            btnCopiaMese.className = "btn-copia";
+            btnCopiaMese.innerText = "Copia Testo";
+            btnCopiaMese.onclick = () => copiaTesto(btnCopiaMese, txtMese.value);
+            
+            wrapperMese.appendChild(labelMese);
+            wrapperMese.appendChild(txtMese);
+            wrapperMese.appendChild(btnCopiaMese);
+            copiamiPerPeriodoContainer.appendChild(wrapperMese);
+
+            let oggi = new Date();
+            let testo7Giorni = ""
+
+            if (cacheConfigCalendario.meseAnalizzato == oggi.getMonth() && cacheConfigCalendario.annoAnalizzato === oggi.getFullYear()) {
+                // 2. Elaborazione "Prossimi 7 Giorni"
+                let start7 = oggi.getDate();
+                let end7 = Math.min(start7 + 6, cacheConfigCalendario.totaleGiorniMese);;
+
+                testo7Giorni = generaTestoRaggruppato(start7, end7);
+
+            } else {
+                testo7Giorni = "Non è il mese corrente"
+            }
+            
+            let wrapper7g = document.createElement('div');
+            wrapper7g.className = "output-box wide";
+            let label7g = document.createElement('label');
+            label7g.innerText = "Buchi Prossimi 7 Giorni";
+            let txt7g = document.createElement('textarea');
+            txt7g.value = testo7Giorni || "Nessun buco nei prossimi 7 giorni.";
+            txt7g.style.height = "250px";
+            
+            let btnCopia7g = document.createElement('button');
+            btnCopia7g.className = "btn-copia";
+            btnCopia7g.innerText = "Copia Testo";
+            btnCopia7g.onclick = () => copiaTesto(btnCopia7g, txt7g.value);
+            
+            wrapper7g.appendChild(label7g);
+            wrapper7g.appendChild(txt7g);
+            wrapper7g.appendChild(btnCopia7g);
+            copiamiPerPeriodoContainer.appendChild(wrapper7g);
+
         }
         
         init_file();
