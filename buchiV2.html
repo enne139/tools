@@ -484,7 +484,17 @@
             targetUltimoAggiornamento.innerText = "";
 
             const urlInput = document.getElementById("url").value;
-            const file = await get_file_from_endpoint(urlInput + "/export");
+            const regexId = /\/d\/([a-zA-Z0-9-_]+)/;
+            const match = urlInput.match(regexId);
+
+            if (!match) {
+                sottotitolo.innerText = "Errore: URL di Google Sheets non valido.";
+                return;
+            }
+
+            const sheetId = match[1];
+            const exportUrl = `https://docs.google.com/spreadsheets/d/${sheetId}/export?format=xlsx`;
+            const file = await get_file_from_endpoint(exportUrl);
             const workbook = XLSX.read(file);
 
             var giorniFogli = (workbook.SheetNames).filter((word) => ["LUN", "MAR", "MER", "GIO", "VEN", "SAB", "DOM"].indexOf(word.substring(0, 3)) != -1);
