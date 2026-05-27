@@ -418,8 +418,15 @@
         function init_file() {
             aggiornaMenuStorico();
             const params = new URLSearchParams(window.location.search);
+            
+            // Controlla prima se c'è "url", poi se c'è "id"
             if(params.has("url")) {
                 document.getElementById("url").value = params.get("url");
+                main();
+            } else if (params.has("id")) {
+                // Costruisce l'URL partendo dall'ID
+                const sheetId = params.get("id");
+                document.getElementById("url").value = `https://docs.google.com/spreadsheets/d/${sheetId}/edit`;
                 main();
             }
         }
