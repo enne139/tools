@@ -395,7 +395,7 @@
 
     <script>
         let cacheBuchiDelMese = {};
-        let cacheTurniAssegnati = []; // Nuova cache per i turni coperti
+        let cacheTurniAssegnati = []; 
         let cacheConfigCalendario = { totaleGiorniMese: 30, giornoSettimanaPartenza: 0, meseAnalizzato: null, annoAnalizzato: null };
 
         // Funzione di supporto per copiare il testo
@@ -542,7 +542,7 @@
             salvaUrlInStorico(testoPeriodo, urlInput);
 
             cacheBuchiDelMese = {};
-            cacheTurniAssegnati = []; // Reset della ricerca a ogni ricaricamento
+            cacheTurniAssegnati = []; 
             
             for(let d=1; d<=31; d++) cacheBuchiDelMese[d] = [];
 
@@ -568,9 +568,9 @@
                     let valA = getVal('A', r).toUpperCase();
                     
                     if (["H12", "H24", "ASSISTENZA", "GETTONE", "CENTRALINO"].includes(valA)) {
-                        let macro = valA;
+                        let macro = valA === "CENTRALINO" ? "H24" : valA;
                         
-                        if (macro === "CENTRALINO") {
+                        if (valA === "CENTRALINO") {
                             if (isDiurno) {
                                 if (isEmpty('C', r) && isEmpty('D', r)) cacheBuchiDelMese[giornoNum].push({ ruolo: "Centralino", orario: "m", macro });
                                 else registraTurnoAssegnato(giornoNum, "Centralino", "m", macro, getVal('C', r), getVal('D', r));
@@ -691,7 +691,7 @@
                         let badge = document.createElement('div');
                         badge.className = `hole-badge ${badgeClass}`;
                         
-                        let macroShort = buco.macro === "CENTRALINO" ? "" : `<span class="mobile-macro ${cssAssistenza}">${buco.macro.substring(0,3)}-</span>`;
+                        let macroShort = `<span class="mobile-macro ${cssAssistenza}">${buco.macro.substring(0,3)}-</span>`;
                         let shiftLetterDisplay = isAssistenza ? "" : `<span class="shift-letter">${buco.orario.toUpperCase()}</span>`;
                         
                         badge.innerHTML = `
@@ -757,7 +757,6 @@
                         let macroFmt = b.macro;
                         if (b.macro === "ASSISTENZA") macroFmt = "Assistenza";
                         else if (b.macro === "GETTONE") macroFmt = "Gettone";
-                        else if (b.macro === "CENTRALINO") macroFmt = "Centralino";
 
                         let timeFmt = isAssistenza ? "" : (classiNomi[b.orario] || "");
                         
